@@ -16,6 +16,18 @@ router.param('id', function (req, res, next, id) {
   .catch(next);
 });
 
+router.post('/login', function(req, res, next){
+  User.findOne({where: req.body})
+      .then(function(foundUser){
+        if(foundUser === undefined){
+          res.sendStatus(401);
+        }else{
+          req.session.user = foundUser;
+          res.sendStatus(204);
+        }
+      }).catch(next)
+})
+
 router.get('/', function (req, res, next) {
   User.findAll({})
   .then(function (users) {
