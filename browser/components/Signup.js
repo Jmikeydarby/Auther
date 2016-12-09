@@ -67,6 +67,7 @@ const mapDispatch = (dispatch) => {
         let password = event.target.password.value;
         event.preventDefault();
         dispatch(signupUser(email, password));
+        browserHistory.push('/');
       }
     }
 }

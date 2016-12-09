@@ -17,15 +17,19 @@ router.param('id', function (req, res, next, id) {
 });
 
 router.post('/signup', function(req, res, next){
+  console.log('signup reached: ', req.body);
   User.findOrCreate({where: req.body})
-      .then(function(user, created){
+      .then(function([user, created]){
+        console.log(user, created);
         if(created === false){
-          res.sendStatus(403);
+          res.status(403).redirect('/');
         }else{
-          req.session.user = user;
-          res.sendStatus(201).redirect('/');
+          delete user.dataValues.password;
+          req.session.user = user.dataValues;
+          res.status(201).send(user.dataValues);
         }
       }).catch((err) => {
+        console.log("catch hit: ", err);
         res.status(403)
         next();
       })
@@ -37,7 +41,6 @@ router.post('/login', function(req, res, next){
         if(foundUser === undefined){
           res.sendStatus(401);
         }else{
-          console.log("user from user.router: ", foundUser.dataValues);
           delete foundUser.dataValues.password;
           req.session.user = foundUser.dataValues;
           res.status(200).send(foundUser.dataValues);

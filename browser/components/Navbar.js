@@ -59,20 +59,29 @@ class Navbar extends React.Component {
   }
 
   renderLogout() {
-    return (
-      <ul className="nav navbar-nav navbar-right">
-        <li>
-        <button className="navbar-btn btn btn-default" 
-          onClick={this.props.logout}>logout</button>
-        </li>
-      </ul>
-    );
+    if (this.props.user.loggedIn){
+      return (
+        <ul className="nav navbar-nav navbar-right">
+          <li>
+            <button className="navbar-btn btn btn-default"
+              onClick={this.props.logout}>logout</button>
+          </li>
+        </ul>
+
+      )
+    }else {
+      return (
+        <div></div>
+      )
+    }
   }
 }
 
 /* -----------------    CONTAINER     ------------------ */
 
-const mapProps = null;
+const mapProps = state => ({
+  user: state.user
+});
 
 const mapDispatch = dispatch => ({
   logout: () => {
