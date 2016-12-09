@@ -37,10 +37,17 @@ router.post('/login', function(req, res, next){
         if(foundUser === undefined){
           res.sendStatus(401);
         }else{
-          req.session.user = foundUser;
-          res.sendStatus(204);
+          console.log("user from user.router: ", foundUser.dataValues);
+          delete foundUser.dataValues.password;
+          req.session.user = foundUser.dataValues;
+          res.status(200).send(foundUser.dataValues);
         }
       }).catch(next)
+})
+
+router.put('/logout', function(req, res, next){
+  req.session.user = undefined;
+  res.sendStatus(204);
 })
 
 router.get('/', function (req, res, next) {
