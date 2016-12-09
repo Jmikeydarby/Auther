@@ -16,6 +16,21 @@ router.param('id', function (req, res, next, id) {
   .catch(next);
 });
 
+router.post('/signup', function(req, res, next){
+  User.findOrCreate({where: req.body})
+      .then(function(user, created){
+        if(created === false){
+          res.sendStatus(403);
+        }else{
+          req.session.user = user;
+          res.sendStatus(201).redirect('/');
+        }
+      }).catch((err) => {
+        res.status(403)
+        next();
+      })
+});
+
 router.post('/login', function(req, res, next){
   User.findOne({where: req.body})
       .then(function(foundUser){
